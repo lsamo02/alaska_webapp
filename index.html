@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- allows for it to be a mobile first design.-->
+    <meta charset="utf-8" /> <!-- this lets it ready a variety of languages.-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" /><!--this sets the scale to 100% upon opening and does not allow the user to zoom-in/out.-->
+    
+    <title>Walking paths, Parks, and Schools! Test</title>
+    
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+        .addRecordBtn { 
+            position: absolute;
+            z-index: 10;
+            top: 10px;
+            right: 10px;
+            background-color: #c11300;
+            color: rgba(255, 255, 255, 0.938);
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .addRecordBtn:hover {
+            background-color: #87006e;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.25/"></script>
+
+    <script>
+        require([
+            "esri/config", //the initial hang-up for this script was the captial "C"; ensure it's lowercase. 
+                "esri/Map", 
+                "esri/views/MapView",
+                "esri/widgets/Locate",
+                "esri/widgets/Search",
+                "esri/layers/FeatureLayer"
+            ], function(esriConfig, Map, MapView, Locate, Search, FeatureLayer) {
+            
+            esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurDz4gU3tTW0RIc-K_Y4-kqaP1xP59QOvyV7mnktLb7t9a2vHFbAFzc7ArSALcovTWnZdcLXc_6UH-L5TIwWOr0Bo014MatGJtlve8jinAwBM0USHG8Ht-osKvJmOiou8JMtMMW-C-eyvOt6PooGvVcD9mDUjXh70tOTl-1hxgP48wjkwrkiAqaLQAI9nf2wAj1tCOhao8tyZY3EP4cMdWxcc1WVA3FcyRDX5Nx1uX3JaAT1_VFqKPzAC";
+            
+            const map = new Map({
+                basemap: "arcgis-imagery"
+            });
+            
+            const view = new MapView({
+                map: map,
+                center: [-149.1811,61.6113], //lab 4 challenge 1
+                zoom: 8, //lab 4 challenge 1
+                container: "viewDiv"
+            });
+            const locateBtn = new Locate({
+                view: view
+            });
+            
+            const searchWidget = new Search({ //lab 4 challenge 2
+                view: view
+            });
+            //Don't forget the ({}) after feature layer. 
+            const layer = new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/survey123_25971b1cb25d4b7da434fc426a210dde_results/FeatureServer"
+            });
+            
+            map.add(layer);
+            
+            view.ui.add(searchWidget, { //lab 4 challenge 2, second part outside of const blocks, stacked at bottom. 
+                position: "top-left",
+                index: 2
+            });
+            //Based on the position of the survey button, needed to stack other widgets in top left. 
+            view.ui.add(locateBtn, {
+                position: "top-left"
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <!-- This next line brings in the survey from AGOL.-->
+    <a href="https://arcg.is/0uzv9K1"target="_blank" class="addRecordBtn">Add Record</a> 
+    <div id="viewDiv"></div>
+</body>
+</html> 
