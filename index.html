@@ -5,7 +5,7 @@
     <meta charset="utf-8" /> <!-- this lets it ready a variety of languages.-->
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" /><!--this sets the scale to 100% upon opening and does not allow the user to zoom-in/out.-->
     
-    <title>Walking paths, Parks, and Schools! Test</title>
+    <title>Walking paths, Parks, and Schools!</title>
     
     <style>
         html,
@@ -44,10 +44,13 @@
             "esri/config", //the initial hang-up for this script was the captial "C"; ensure it's lowercase. 
                 "esri/Map", 
                 "esri/views/MapView",
+                "esri/BasemmapGallery",
+                "esri/widgets/expand",
                 "esri/widgets/Locate",
                 "esri/widgets/Search",
-                "esri/layers/FeatureLayer"
-            ], function(esriConfig, Map, MapView, Locate, Search, FeatureLayer) {
+                "esri/layers/FeatureLayer",
+                "esri/widgets/Legend"
+            ], function(esriConfig, Map, MapView, BasemapGallery, expand, Locate, Search, FeatureLayer, Legend) {
             
             esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurDz4gU3tTW0RIc-K_Y4-kqaP1xP59QOvyV7mnktLb7t9a2vHFbAFzc7ArSALcovTWnZdcLXc_6UH-L5TIwWOr0Bo014MatGJtlve8jinAwBM0USHG8Ht-osKvJmOiou8JMtMMW-C-eyvOt6PooGvVcD9mDUjXh70tOTl-1hxgP48wjkwrkiAqaLQAI9nf2wAj1tCOhao8tyZY3EP4cMdWxcc1WVA3FcyRDX5Nx1uX3JaAT1_VFqKPzAC";
             
@@ -61,6 +64,19 @@
                 zoom: 8, //lab 4 challenge 1
                 container: "viewDiv"
             });
+
+            const basemapGallery = new BasemapGallery({
+                view: view,
+                source: [Basemap.fromId("arcgis-topographic"),Basemap.fromId("arcgis-streets"), Basemap.fromId("arcgis-imagery")]
+            });
+
+            const bgExpand = new Expand({
+                view: view,
+                content: basemapGallery
+            });
+
+            view.ui.add(bgExpand, "bottom-right"); 
+            
             const locateBtn = new Locate({
                 view: view
             });
@@ -82,6 +98,47 @@
             //Based on the position of the survey button, needed to stack other widgets in top left. 
             view.ui.add(locateBtn, {
                 position: "top-left"
+            });
+            
+            const popupMatsupaths = {
+                "name": "MatSu Paved Walking Paths",
+                "content": "<b>Name:<b> {Name}<br><b>Length: </b>{Shape_Length}<br>"
+            }
+            const MatsuPathsLayer = new FeatureLayer({
+                url: "https://maps.matsugov.us/map/rest/services/OpenData/Infrastructure_SeparatedPaths/FeatureServer/0",
+                outFields: ["Name","Length"],
+                popupTemplate: popupMatsupaths
+            });
+            map.add(MatsuPathsLayer);
+
+            const popupMatsuParks = {
+                "name": "MatSu Parks",
+                "TBD": "<b>Name:<b> {Name}<br><b>Owner: </b>{Owner}<br><b>Type: </b>{Type}"
+            }
+            const MatsuParksLayer = new FeatureLayer({
+                url: "https://maps.matsugov.us/map/rest/services/OpenData/Recreational_LocalParks/FeatureServer/0",
+                outFields: ["Owner Name","Phone"],
+                popupTemplate: popupMatsuParks
+            });
+            map.add(MatsuParksLayer);
+            
+            const popupMatsuElemSchools = {
+                "name": "MatSu Elementary Schools",
+                "TBD": "<b>Name:<b> {ES_name}<br>"
+            }
+            const MatsuElemSchools = new FeatureLayer({
+                url: "https://services.arcgis.com/fX5IGselyy1TirdY/arcgis/rest/services/MSBSD_Elementary_FindMySchool_07172019/FeatureServer/1",
+                outFields: ["Owner Name","Phone"],
+                popupTemplate: popupMatsuParks
+            });
+            map.add(MatsuElemSchools);
+            
+            let legend = new Legend({
+                view: view
+            });
+
+            view.ui.add(legend, {
+                position: "bottom-right"
             });
         });
 
