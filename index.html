@@ -113,7 +113,7 @@
 
             const popupMatsuParks = {
                 "name": "MatSu Parks",
-                "TBD": "<b>Name:<b> {Name}<br><b>Owner: </b>{Owner}<br><b>Type: </b>{Type}"
+                "content": "<b>Name:<b> {Name}<br><b>Owner: </b>{Owner}<br><b>Type: </b>{Type}"
             }
             const MatsuParksLayer = new FeatureLayer({
                 url: "https://maps.matsugov.us/map/rest/services/OpenData/Recreational_LocalParks/FeatureServer/0",
@@ -124,7 +124,7 @@
             
             const popupMatsuElemSchools = {
                 "name": "MatSu Elementary Schools",
-                "TBD": "<b>Name:<b> {ES_name}<br>"
+                "content": "<b>Name:<b> {ES_name}<br>"
             }
             const MatsuElemSchools = new FeatureLayer({
                 url: "https://services.arcgis.com/fX5IGselyy1TirdY/arcgis/rest/services/MSBSD_Elementary_FindMySchool_07172019/FeatureServer/1",
