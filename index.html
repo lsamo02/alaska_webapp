@@ -45,38 +45,25 @@
                 "esri/Map", 
                 "esri/views/MapView",
                 "esri/Basemap",
-                "esri/widgets/BasemapGallery",
                 "esri/widgets/Locate",                
                 "esri/widgets/Search",
                 "esri/layers/FeatureLayer",
                 "esri/widgets/Legend"
-            ], function(esriConfig, Map, MapView, Basemap, BasemapGallery, FeatureLayer, Legend) {
+            ], function(esriConfig, Map, MapView, Basemap, Locate, Search, FeatureLayer, Legend) {
             
             esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurDz4gU3tTW0RIc-K_Y4-kqaP1xP59QOvyV7mnktLb7t9a2vHFbAFzc7ArSALcovTWnZdcLXc_6UH-L5TIwWOr0Bo014MatGJtlve8jinAwBM0USHG8Ht-osKvJmOiou8JMtMMW-C-eyvOt6PooGvVcD9mDUjXh70tOTl-1hxgP48wjkwrkiAqaLQAI9nf2wAj1tCOhao8tyZY3EP4cMdWxcc1WVA3FcyRDX5Nx1uX3JaAT1_VFqKPzAC";
             
             const map = new Map({
-                basemap: "arcgis-imagery"
+                basemap: "arcgis-light-gray"
             });
             
             const view = new MapView({
                 map: map,
                 center: [-149.1811,61.6113], //lab 4 challenge 1
-                zoom: 8, //lab 4 challenge 1
+                zoom: 10, //lab 4 challenge 1
                 container: "viewDiv"
             });
 
-            const basemapGallery = new BasemapGallery({
-                view: view,
-                source: [Basemap.fromId("arcgis-topographic"),Basemap.fromId("arcgis-streets"), Basemap.fromId("arcgis-imagery")]
-            });
-
-            const bgExpand = new Expand({
-                view: view,
-                content: basemapGallery
-            });
-
-            view.ui.add(bgExpand, "bottom-right"); 
-            
             const locateBtn = new Locate({
                 view: view
             });
@@ -91,21 +78,13 @@
             
             map.add(layer);
             
-            view.ui.add(searchWidget, { //lab 4 challenge 2, second part outside of const blocks, stacked at bottom. 
-                position: "top-left",
-                index: 2
-            });
-            //Based on the position of the survey button, needed to stack other widgets in top left. 
-            view.ui.add(locateBtn, {
-                position: "top-left"
-            });
-            
+
             const popupMatsupaths = {
                 "name": "MatSu Paved Walking Paths",
-                "content": "<b>Name:<b> {Name}<br><b>Length: </b>{Shape_Length}<br>"
+                "content": "<b>Name:<b> {Name}<br><b>"
             }
             const MatsuPathsLayer = new FeatureLayer({
-                url: "https://maps.matsugov.us/map/rest/services/OpenData/Infrastructure_SeparatedPaths/FeatureServer/0",
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Infrastructure_Separated_Paths/FeatureServer",
                 outFields: ["Name","Length"],
                 popupTemplate: popupMatsupaths
             });
@@ -116,7 +95,7 @@
                 "content": "<b>Name:<b> {Name}<br><b>Owner: </b>{Owner}<br><b>Type: </b>{Type}"
             }
             const MatsuParksLayer = new FeatureLayer({
-                url: "https://maps.matsugov.us/map/rest/services/OpenData/Recreational_LocalParks/FeatureServer/0",
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Recreational_Local_Parks/FeatureServer",
                 outFields: ["Park Name","Owner"],
                 popupTemplate: popupMatsuParks
             });
@@ -127,19 +106,40 @@
                 "content": "<b>Name:<b> {ES_name}<br>"
             }
             const MatsuElemSchools = new FeatureLayer({
-                url: "https://services.arcgis.com/fX5IGselyy1TirdY/arcgis/rest/services/MSBSD_Elementary_FindMySchool_07172019/FeatureServer/1",
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/MSBSD_Elementary_FindMySchool_07172019__5273275750291540837/FeatureServer",
                 outFields: ["Elementary School Name: "],
                 popupTemplate: popupMatsuParks
             });
             map.add(MatsuElemSchools);
             
             let legend = new Legend({
-                view: view
+                view: view,
+                layerInfos: [{
+                    layer: MatsuElemSchools,
+                    title: "MatSu Elementary School Boundaries"
+                },{
+                    layer: MatsuParksLayer,
+                    title: "MatSu Parks"
+                },{
+                    layer: MatsuPathsLayer,
+                    title: "MatSu Pave Paths"
+
+                }]
+                    
             });
 
             view.ui.add(legend, {
                 position: "bottom-right"
             });
+            view.ui.add(searchWidget, { //lab 4 challenge 2, second part outside of const blocks, stacked at bottom. 
+                position: "top-left",
+                index: 2
+            });
+            //Based on the position of the survey button, needed to stack other widgets in top left. 
+            view.ui.add(locateBtn, {
+                position: "top-left"
+            });
+            
         });
 
     </script>
