@@ -112,6 +112,17 @@
             });
             map.add(MatsuElemSchools);
             
+            const popupMatSuResults = {
+                "name": "MatSu Survey Results",
+            }
+            const MatSuSurvey = new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/survey123_23d2b122645b44b8ad72e5ece64dca18_results/FeatureServer",
+                outfields: ["New What: "],
+                popupTemplate: popupMatSuResults
+            })
+            
+            map.add(MatSuSurvey);
+
             let legend = new Legend({
                 view: view,
                 layerInfos: [{
@@ -123,7 +134,9 @@
                 },{
                     layer: MatsuPathsLayer,
                     title: "MatSu Pave Paths"
-
+                },{
+                    layer: MatSuSurvey,
+                    title: "MatSu Survey Submission"
                 }]
                     
             });
