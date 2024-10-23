@@ -94,10 +94,18 @@
                 "name": "MatSu Parks",
                 "content": "<b>Name:<b> {Name}<br><b>Owner: </b>{Owner}<br><b>Type: </b>{Type}"
             }
+
+            //adding const to change park symbol 
+            const fillSymbol= {
+                type: "simple-fill",
+                color: "green"
+            }
+
             const MatsuParksLayer = new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Recreational_Local_Parks/FeatureServer",
                 outFields: ["Park Name","Owner"],
-                popupTemplate: popupMatsuParks
+                popupTemplate: popupMatsuParks,
+                symbol: fillSymbol //changes symbology of parks
             });
             map.add(MatsuParksLayer);
             
