@@ -91,16 +91,15 @@
             map.add(MatsuPathsLayer);
 
             //adding renderer to change park symbol 
-            const parkRenderer = {
-                type: "simple", 
-                symbol: {
+            const parkRenderer = new SimpleRenderer ({ 
+                symbol: new SimpleFillSymbol ({
                     color: "#8fbc8f",
                     outline: {
                         width: 0.5, 
                         color: "#000000"
                     }
-                }  
-            };
+                }) 
+            });
 
             const popupMatsuParks = {
                 "name": "MatSu Parks",
