@@ -90,29 +90,30 @@
             });
             map.add(MatsuPathsLayer);
 
+            //adding renderer to change park symbol 
+            const parkRenderer = {
+                type: "simple", 
+                symbol: {
+                    color: "#8fbc8f",
+                    outline: {
+                        width: 0.5, 
+                        color: black
+                    }
+                }  
+            };
+
             const popupMatsuParks = {
                 "name": "MatSu Parks",
                 "content": "<b>Name:<b> {Name}<br><b>Owner: </b>{Owner}<br><b>Type: </b>{Type}"
-            }
-
-            //adding renderer to change park symbol 
-            const parkRenderer = new SimpleRenderer({
-                "symbol": new SimpleFillSymbol({
-                    "color": "#8fbc8f",
-                    "outline": {
-                        "color": "black",
-                        "width": .5
-                    }
-                })
-               
-            });
+            };
 
             const MatsuParksLayer = new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Recreational_Local_Parks/FeatureServer",
+                renderer: parkRenderer,
                 outFields: ["Park Name","Owner"],
-                popupTemplate: popupMatsuParks,
-                renderer: parkRenderer
+                popupTemplate: popupMatsuParks
             });
+
             map.add(MatsuParksLayer);
             
             const popupMatsuElemSchools = {
